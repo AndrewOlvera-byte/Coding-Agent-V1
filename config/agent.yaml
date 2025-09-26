@@ -1,0 +1,58 @@
+model:
+  provider: openai
+  name: gpt-4o-mini
+  temperature: 0.2
+  max_tokens: 2000
+
+planner:
+  strategy: react
+  max_depth: 6
+  beam_width: 3
+  thought_budget: 8
+  reflection_every_n_steps: 4
+
+memory:
+  vector_store: chroma
+  persist_path: ./.memory
+  namespace: default
+  top_k: 6
+  summarize_every_n_steps: 10
+  ttl_days: 30
+
+tools:
+  enabled:
+    - fs_read
+    - fs_write
+    - rg_search
+    - terminal
+    - git
+    - web_search
+  fs:
+    root_allowlist:
+      - ./workspace
+    max_write_kb: 256
+  terminal:
+    timeout_sec: 60
+    allowlist:
+      - npm
+      - pip
+      - pytest
+      - node
+      - python
+      - git
+  web_search:
+    provider: tavily
+
+sandbox:
+  enabled: true
+  cpu_limit: "2"
+  mem_limit: "2g"
+  network_egress_allowlist:
+    - github.com
+    - pypi.org
+    - registry.npmjs.org
+
+observability:
+  tracing: langfuse
+  log_level: info
+
